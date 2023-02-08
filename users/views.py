@@ -40,3 +40,6 @@ def login_page(reauest):
 def logout_page(request):
     logout(request)
     return redirect('login')
+
+def cart_page(request):
+    return render(request, 'accounts/cart.html')
