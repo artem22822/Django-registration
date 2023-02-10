@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-27!!u9txu4#q2i26pkela3#6a$7dn4kt_53ra^$*)pi^dr2r61
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-registration-production.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'django-registration-production.up.railway.app']
 
 
 # Application definition
@@ -123,3 +123,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS=['django-registration-production.up.railway.app']
