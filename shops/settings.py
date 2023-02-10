@@ -124,4 +124,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS=['django-registration-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS=['https://django-registration-production.up.railway.app']
