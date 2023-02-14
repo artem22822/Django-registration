@@ -23,19 +23,20 @@ def singup(reauest):
 
             return redirect('login')
 
-    return render(reauest, 'accounts/singup.html')
+    return render(reauest, 'accounts/index.html')
 
 def login_page(reauest):
     if reauest.method == 'POST':
         username = reauest.POST.get('username')
         password = reauest.POST.get('pass')
-        user = authenticate(reauest, username = username, password = password)
+        user = authenticate(reauest, username=username, password=password)
+        print(username, password)
         if user is not None:
             login(reauest, user)
             return redirect('home')
         else:
             return HttpResponse('Username or Password is incorrect!!!!!')
-    return  render(reauest, 'accounts/login.html')
+    return  render(reauest, 'accounts/index.html')
 
 def logout_page(request):
     logout(request)
