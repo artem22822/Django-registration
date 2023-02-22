@@ -3,18 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
-    <style>
-     body {
-      color: darkblue;
-      text-align: center;
-      }
-
-    </style>
 </head>
 <body>
 
-<h1>Cart Page</h1>
+<h1>Products add in Cart </h1>
+
+
+
+
+{% block content %}
+
+<div class="cart" >
+    <h2>Cart</h2>
+    <ul>
+        {% for item in card.products.all %}
+
+        <form action="{% url 'delete_item_card' item.id %}" method="POST">
+            {% csrf_token %}
+            <li>{{ item.name }} - {{ item.price }} usd</li>
+                <button type="submit" class="btn btn-primary">delete </button>
+        </form>
+        {% endfor %}
+    </ul>
+    <p>Total: {{ card.total_price }} usd</p>
+</div>
+
+{% endblock %}
+
+
 
 </body>
 </html>

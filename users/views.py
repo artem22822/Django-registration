@@ -1,46 +1,96 @@
-from django.shortcuts import render, HttpResponse,redirect
+from django.shortcuts import render, HttpResponse,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views import View
 
-@login_required(login_url='login')
-def home(reauest):
-    return render(reauest,'accounts/home.html')
+from users.models import Product, Cart
 
-def singup(reauest):
-    if reauest.method == 'POST':
-        uname = reauest.POST.get('username')
-        email = reauest.POST.get('email')
-        password1 = reauest.POST.get('password1')
-        password2 = reauest.POST.get('password2')
+
+class HomeView(View):
+    @method_decorator(login_required(login_url='login'))
+    def get(self, request):
+        return render(request, 'accounts/home.html')
+
+class SingupView(View):
+    def get(self,request):
+        return  render(request, 'accounts/index.html')
+
+    def post(self,request):
+        uname = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
 
         if password1 != password2:
             return HttpResponse('You Password mismatch !!!')
         else:
-            my_user = User.objects.create_user(uname,email,password1)
-            my_user.save()
-            print(uname, email, password1, password2)
-
+            user = User.objects.create_user(uname,email,password1)
+            user.save()
+            print(uname, email, password1)
             return redirect('login')
 
-    return render(reauest, 'accounts/index.html')
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'accounts/index.html')
 
-def login_page(reauest):
-    if reauest.method == 'POST':
-        username = reauest.POST.get('username')
-        password = reauest.POST.get('pass')
-        user = authenticate(reauest, username=username, password=password)
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('pass')
+        user = authenticate(request, username=username, password=password)
         print(username, password)
         if user is not None:
-            login(reauest, user)
+            login(request, user)
             return redirect('home')
         else:
             return HttpResponse('Username or Password is incorrect!!!!!')
-    return  render(reauest, 'accounts/index.html')
 
-def logout_page(request):
-    logout(request)
-    return redirect('login')
+class LogoutView(View):
+    def get(self,reques):
+        logout(reques)
+        return redirect('login')
 
-def cart_page(request):
-    return render(request, 'accounts/cart.html')
+class ProductView(View):
+    def get(self,request):
+        products = Product.objects.all()
+        cart = request.session.get('cart', {})
+        context = {
+            'x': products,
+            'cart': cart,
+        }
+        return render(request, 'accounts/product.html', context)
+
+class AddToCart(View):
+    def post(self,request, product_id):
+        product = Product.objects.get(id=product_id)
+        user = request.user
+
+        cart, created = Cart.objects.get_or_create(user=user)
+
+
+        if request.method == 'POST':
+            print(product, product.name, product.price, product.description)
+            print(user.username)
+            cart.products.add(product)
+            print(cart)
+            return redirect('card_page')
+
+class CartView(View):
+    def get(self,request):
+        card = Cart.objects.get(user=request.user)
+        return render(request, 'accounts/cart.html', context={'card': card})
+
+class DeleteItemCart(View):
+    def post(self,request, item_id):
+        product = get_object_or_404(Product, id=item_id)
+        cart = Cart.objects.get(user=request.user)
+
+        if request.method == 'POST':
+            cart.products.remove(product)
+            return redirect('card_page')
+
+class ViewProduct(View):
+    def get(self,request, product_id):
+        product = Product.objects.get(id=product_id)
+        return render(request, 'accounts/viwe_product.html', context={'x': product})

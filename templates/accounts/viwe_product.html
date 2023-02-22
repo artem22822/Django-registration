@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+</head>
+<body>
+<h1>Viwe Product</h1>
+
+{% block content %}
+    <ul>
+        <form action="{% url 'product' %}" method="GET">
+            {% csrf_token %}
+            <br>
+            <li>{{x.name }} - {{ x.price }} - {{ x.description }}</li>
+            <button type="submit" class="btn btn-primary">Back</button>
+        </form>
+    </ul>
+
+
+
+{% endblock %}
+</body>
+</html>
