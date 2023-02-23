@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from users.models import Product, Cart
+from users.models import Product, Cart, Order
 
 
 class HomeView(View):
@@ -94,3 +94,23 @@ class ViewProduct(View):
     def get(self,request, product_id):
         product = Product.objects.get(id=product_id)
         return render(request, 'accounts/viwe_product.html', context={'x': product})
+
+class OrderView(View):
+    def post(self, request):
+        user = request.user
+        cart = Cart.objects.get(user=user)
+        total_price = Cart.total_price(cart)
+        delivery_addres = request.POST.get('delivery_addres')
+
+        for product in cart.products.all():
+            Order.objects.create(user=user, product=product, total_price=total_price, delivery_addres=delivery_addres)
+            print(product,'Productssssss')
+
+        context = {
+            'user': user,
+            'order' : cart,
+            'total_price' : total_price
+
+        }
+
+        return render(request, 'accounts/my_orders.html', context=context)

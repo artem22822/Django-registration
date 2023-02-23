@@ -30,6 +30,17 @@
         {% endfor %}
     </ul>
     <p>Total: {{ card.total_price }} usd</p>
+
+    <form action="{% url 'my_orders' %}" method="POST">
+        {% csrf_token %}
+        <h3>Scheckoutr</h3>
+
+        <label for="delivey">Delivery Address</label>
+        <input type="text" placeholder="Delivery Address" name="delivery_addres" id="delivery_addres">
+        <button type="submit" class="btn btn-primary">Order</button>
+
+    </form>
+
 </div>
 
 {% endblock %}

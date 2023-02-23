@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+<h1> MY ORDERS</h1>
+
+{% block content %}
+
+<div class="order" >
+    <h2>Orders</h2>
+    <ul>
+        {% for item in order.products.all %}
+
+            <li>{{ item.name }} - {{ item.price }} usd</li>
+
+        {% endfor %}
+    </ul>
+    <p>Total Price: {{ total_price }} usd</p>
+
+
+</div>
+
+
+
+{% endblock %}
+</body>
+</html>
