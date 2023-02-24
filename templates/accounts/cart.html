@@ -31,7 +31,7 @@
     </ul>
     <p>Total: {{ card.total_price }} usd</p>
 
-    <form action="{% url 'my_orders' %}" method="POST">
+    <form action="{% url 'orders' %}" method="POST">
         {% csrf_token %}
         <h3>Scheckoutr</h3>
 

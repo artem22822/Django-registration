@@ -115,4 +115,12 @@ class OrderView(View):
 
         }
 
-        return render(request, 'accounts/my_orders.html', context=context)
+        return render(request, 'accounts/orders.html', context=context)
+
+class MyOrdersView(View):
+    def get(self,request):
+        user = request.user
+        orders = Order.objects.filter(user=user)
+        print(orders)
+
+        return render(request, 'accounts/my_orders.html', context={'orders': orders})

@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    {% load static %}
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
 <body>
-<h1> MY ORDERS</h1>
-
+<h1>My Orders</h1>
 {% block content %}
-
-<div class="order" >
-    <h2>Orders</h2>
+{% if orders %}
     <ul>
-        {% for item in order.products.all %}
+        {% for order in orders %}
+        <li>
+            Order #{{ forloop.counter }}<br>
+            Products:
+            <ul>
+                {% for p in order.products.all %}
+                    <li>{{ p.name }} - {{ p.price }} - usd</li>
+                {% endfor %}
+            </ul>
+            Total Price: {{ order.total_price }}
 
-            <li>{{ item.name }} - {{ item.price }} usd</li>
-
+        </li>
         {% endfor %}
     </ul>
-    <p>Total Price: {{ total_price }} usd</p>
 
-
-</div>
-
-
+{% else %}
+    <h1>You dont have any Orders</h1>
+{% endif %}
 
 {% endblock %}
+
 </body>
 </html>
