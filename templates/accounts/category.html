@@ -3,16 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    {% load static %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
 <body>
 <h1>CATEGORY PRODUCTS</h1>
 {% block content %}
-    <ul>
-        {% for category in category %}
-            <li>{{ category.name }} - {{ category.created_at }}</li>
-        {% endfor %}
-    </ul>
 
+    {% for category in category %}
+        <h2>{{ category.name }}</h2>
+        <ul>
+            {% for product in category.products.all %}
+                <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                {% csrf_token %}
+                    <li>{{ product.name }} - {{ product.price }}</li>
+                    <a href="{% url 'viwe_product' product.id %}">Viwe</a><br>
+                    <br>
+                    <button type="submit" class="btn btn-primary">add product</button>
+                </form>
+            {% endfor %}
+        </ul>
+    {% endfor %}
 {% endblock %}
 </body>
 </html>
