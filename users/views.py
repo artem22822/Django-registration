@@ -101,10 +101,12 @@ class OrderView(View):
         cart = Cart.objects.get(user=user)
         total_price = Cart.total_price(cart)
         delivery_addres = request.POST.get('delivery_addres')
+        products = list(cart.products.all())
+        print(products, "PRODACTSSSSSS")
 
-        for product in cart.products.all():
-            Order.objects.create(user=user, product=product, total_price=total_price, delivery_addres=delivery_addres)
-            print(product,'Productssssss')
+        order = Order.objects.create(user=user, total_price=total_price, delivery_addres=delivery_addres)
+        order.products.add(*products)
+        order.save()
 
         context = {
             'user': user,
