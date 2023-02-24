@@ -3,10 +3,20 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.utils import timezone
 
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
 class Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=100)
     price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0)])
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', default=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -47,6 +57,8 @@ class Order(models.Model):
     @property
     def product_name(self):
         return [product.name for product in self.products.all()]
+
+
 
 
 

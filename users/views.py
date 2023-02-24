@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from users.models import Product, Cart, Order
+from users.models import Product, Cart, Order, Category
 
 
 class HomeView(View):
@@ -124,3 +124,9 @@ class MyOrdersView(View):
         print(orders)
 
         return render(request, 'accounts/my_orders.html', context={'orders': orders})
+
+class CategoryView(View):
+    def get(self,request):
+        category = Category.objects.filter()
+
+        return render(request, 'accounts/category.html',context={'category':category})
