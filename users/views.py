@@ -127,14 +127,19 @@ class MyOrdersView(View):
 
 class CategoryView(View):
     def get(self,request):
-        category = Category.objects.filter()
-
+        category = Category.objects.all()
         return render(request, 'accounts/category.html',context={'category':category})
 
 class ViewCategoryView(View):
-    def get(self,request, category_id):
-        category = Category.objects.filter()
-        cat_id = category.get(id=category_id)
-        print(category)
-        print(cat_id)
-        return render(request, 'accounts/view_category.html', context={'category': category,'cat_id':cat_id})
+    def get(self,request, category_obj):
+        category_object = Category.objects.get(id=category_obj)
+        product_category = Product.objects.filter(category=category_object)
+
+        print(product_category,'Categor1111')
+        print(category_object, 'Id category')
+        context = {
+            'category_obj': category_object,
+            'product_category': product_category,
+        }
+
+        return render(request, 'accounts/view_category.html', context=context)

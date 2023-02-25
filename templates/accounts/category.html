@@ -14,15 +14,8 @@
     {% for category in category %}
         <h2>{{ category.name }}</h2>
         <ul>
-
-                <form action="" method="POST">
                 {% csrf_token %}
-
                     <a href="{% url 'view_category' category.id %}">Viwe</a><br>
-                    <br>
-
-                </form>
-
         </ul>
     {% endfor %}
 {% endblock %}
