@@ -2,7 +2,7 @@ from django.urls import path
 from .import views
 from .views import HomeView, SingupView, LoginView, LogoutView, \
 ProductView, AddToCart, CartView, DeleteItemCart, ViewProduct,OrderView, MyOrdersView ,\
-CategoryView
+CategoryView, ViewCategoryView
 
 urlpatterns = [
     path('', SingupView.as_view(), name='singup'),
@@ -17,5 +17,6 @@ urlpatterns = [
     path('orders/', OrderView.as_view(), name='orders'),
     path('myorders/', MyOrdersView.as_view(), name='my_orders'),
     path('category/', CategoryView.as_view(), name='category'),
+    path('viwecategory/<int:category_id>/', ViewCategoryView.as_view(), name='view_category'),
 
 ]

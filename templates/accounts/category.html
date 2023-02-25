@@ -14,15 +14,15 @@
     {% for category in category %}
         <h2>{{ category.name }}</h2>
         <ul>
-            {% for product in category.products.all %}
-                <form action="{% url 'add_to_cart' product.id %}" method="POST">
+
+                <form action="" method="POST">
                 {% csrf_token %}
-                    <li>{{ product.name }} - {{ product.price }}</li>
-                    <a href="{% url 'viwe_product' product.id %}">Viwe</a><br>
+
+                    <a href="{% url 'view_category' category.id %}">Viwe</a><br>
                     <br>
-                    <button type="submit" class="btn btn-primary">add product</button>
+
                 </form>
-            {% endfor %}
+
         </ul>
     {% endfor %}
 {% endblock %}

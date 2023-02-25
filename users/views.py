@@ -130,3 +130,11 @@ class CategoryView(View):
         category = Category.objects.filter()
 
         return render(request, 'accounts/category.html',context={'category':category})
+
+class ViewCategoryView(View):
+    def get(self,request, category_id):
+        category = Category.objects.filter()
+        cat_id = category.get(id=category_id)
+        print(category)
+        print(cat_id)
+        return render(request, 'accounts/view_category.html', context={'category': category,'cat_id':cat_id})
