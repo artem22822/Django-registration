@@ -1,9 +1,11 @@
+from django.db.models import Q
 from django.shortcuts import render, HttpResponse,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
+from .forms import ProductSearchForm
 
 from users.models import Product, Cart, Order, Category
 
@@ -143,3 +145,14 @@ class ViewCategoryView(View):
         }
 
         return render(request, 'accounts/view_category.html', context=context)
+
+class ProductSearchView(View):
+    def post(self, request):
+        search_guery = request.POST.get('search','')
+        if search_guery:
+            products = Product.objects.filter(name__icontains=search_guery)
+
+            return render(request, 'accounts/product_search.html', context={'products': products})
+        else:
+
+            return render(request, 'accounts/home.html')
