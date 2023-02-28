@@ -14,7 +14,8 @@
 
 {% block content %}
   <ul>
-    {% for product in x %}
+  {% if products%}
+    {% for product in products %}
       <form action="{% url 'add_to_cart' product.id %}" method="POST">
         {% csrf_token %}
           <li>{{ product.name }} - {{ product.price }}</li>
@@ -23,6 +24,9 @@
             <button type="submit" class="btn btn-primary">add product</button>
       </form>
     {% endfor %}
+    {% else%}
+      <p> Product not found</p>
+  {% endif %}
   </ul>
 
 

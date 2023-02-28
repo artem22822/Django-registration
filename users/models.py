@@ -21,6 +21,17 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    @property
+    def serialyze(self):
+        print(self.name)
+        print("OOOOOOOOOOOOO")
+        return {
+            'name': self.name,
+            'description': self.description,
+            'price': str(self.price),
+            'category': self.category.name,
+        }
+
 
 
 class Cart(models.Model):

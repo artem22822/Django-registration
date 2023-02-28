@@ -1,4 +1,5 @@
-from django.db.models import Q
+import json
+from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -58,7 +59,7 @@ class ProductView(View):
         products = Product.objects.all()
         cart = request.session.get('cart', {})
         context = {
-            'x': products,
+            'products': products,
             'cart': cart,
         }
         return render(request, 'accounts/product.html', context)
@@ -151,8 +152,61 @@ class ProductSearchView(View):
         search_guery = request.POST.get('search','')
         if search_guery:
             products = Product.objects.filter(name__icontains=search_guery)
+            print(products)
 
-            return render(request, 'accounts/product_search.html', context={'products': products})
+            return render(request, 'accounts/product.html', context={'products': products})
         else:
 
             return render(request, 'accounts/home.html')
+
+class ApiProductsView(View):
+    def get(self,request):
+        products = Product.objects.all()
+        data = []
+
+        for p in products:
+            data.append(p.serialyze)
+
+        print("DFDFDFDFDFDFDFDFDFDFDF")
+        print(data)
+        return HttpResponse(json.dumps(data))
+
+class ApiProductView(View):
+    def get(self,request, product_id):
+
+        try:
+            product = Product.objects.get(id=product_id)
+            d = {
+                'name': product.name,
+                'price': product.price,
+                'description': product.description,
+                'category': product.category.name,
+            }
+            return JsonResponse(d)
+
+        except Product.DoesNotExist:
+
+            return HttpResponse("Product not found")
+
+class ApiCartView(View):
+    def get(self, request, product_id):
+
+        try:
+            product = Product.objects.get(id=product_id)
+            user = request.user
+            cart = Cart.objects.get(user=user)
+            cart_products = cart.products.all()
+            status ={"status": 'Not added'}
+
+            for p in cart_products:
+                if p.name == product.name:
+                    status['status'] = 'added'
+
+            return HttpResponse(json.dumps(status))
+
+        except Product.DoesNotExist:
+
+            return HttpResponse("Product not found")
+
+
+
