@@ -2,7 +2,8 @@ from django.urls import path
 from .import views
 from .views import HomeView, SingupView, LoginView, LogoutView, \
 ProductView, AddToCart, CartView, DeleteItemCart, ViewProduct,OrderView, MyOrdersView ,\
-CategoryView, ViewCategoryView,ProductSearchView, ApiProductsView, ApiProductView, ApiCartView
+CategoryView, ViewCategoryView,ProductSearchView, ApiProductsView, ApiProductView, ApiCartView,\
+ApiDeleteItemCart, ApiSearchView
 
 urlpatterns = [
     path('', SingupView.as_view(), name='singup'),
@@ -22,5 +23,7 @@ urlpatterns = [
     path('api/products/', ApiProductsView.as_view(), name='api_products'),
     path('api/product/<int:product_id>/', ApiProductView.as_view(), name='api_product'),
     path('api/cart/<int:product_id>/', ApiCartView.as_view(), name='api_product'),
+    path('api/cartdel/<int:product_id>/', ApiDeleteItemCart.as_view(), name='api_cartdel'),
+    path('api/search/', ApiSearchView.as_view(), name='api_search'),
 
 ]

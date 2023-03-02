@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
-from .forms import ProductSearchForm
 
 from users.models import Product, Cart, Order, Category
 
@@ -195,12 +194,8 @@ class ApiCartView(View):
             product = Product.objects.get(id=product_id)
             user = request.user
             cart = Cart.objects.get(user=user)
-            cart_products = cart.products.all()
-            status ={"status": 'Not added'}
-
-            for p in cart_products:
-                if p.name == product.name:
-                    status['status'] = 'added'
+            cart.products.add(product)
+            status ={"status": 'added'}
 
             return HttpResponse(json.dumps(status))
 
@@ -208,5 +203,50 @@ class ApiCartView(View):
 
             return HttpResponse("Product not found")
 
+class ApiDeleteItemCart(View):
+    def get(self,request, product_id):
+        try:
+            product = Product.objects.get(id=product_id)
+            cart = Cart.objects.get(user=request.user)
+            cart.products.remove(product)
+            status = {'status': 'deleted'}
+            print(product)
+            return HttpResponse(json.dumps(status))
 
+        except Product.DoesNotExist:
 
+            return HttpResponse("Product not found")
+
+class ApiSearchView(View):
+    def post(self, request):
+        search_guery = request.POST.get('api_search','')
+
+        if search_guery:
+            products = Product.objects.filter(name__icontains=search_guery)
+            data = {}
+            for product in products:
+                data[product.name]={
+                                    'name': product.name,
+                                    'price': int(product.price),
+                                    'description': product.description,
+                                    'category': product.category.name,
+                                    }
+
+            return HttpResponse(data)
+
+    def get(self,request):
+        print(request.GET)
+        query_search = request.GET.get('api_search','')
+        data = {}
+        if query_search:
+
+            products = Product.objects.filter(name__icontains=query_search)
+            for product in products:
+                data[product.name] = {
+                    'name': product.name,
+                    'price': int(product.price),
+                    'description': product.description,
+                    'category': product.category.name,
+                }
+        print(data, "DADADADADADADADADt")
+        return HttpResponse(json.dumps(data))
