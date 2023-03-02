@@ -223,30 +223,43 @@ class ApiSearchView(View):
 
         if search_guery:
             products = Product.objects.filter(name__icontains=search_guery)
-            data = {}
+            data = []
             for product in products:
-                data[product.name]={
+                data.append({
                                     'name': product.name,
                                     'price': int(product.price),
                                     'description': product.description,
                                     'category': product.category.name,
-                                    }
+                                    })
 
             return HttpResponse(data)
 
     def get(self,request):
-        print(request.GET)
         query_search = request.GET.get('api_search','')
-        data = {}
+        data = []
         if query_search:
 
             products = Product.objects.filter(name__icontains=query_search)
             for product in products:
-                data[product.name] = {
+                data.append({
                     'name': product.name,
                     'price': int(product.price),
                     'description': product.description,
                     'category': product.category.name,
-                }
-        print(data, "DADADADADADADADADt")
+                })
+        #print(data, "DADADADADADADADADt")
         return HttpResponse(json.dumps(data))
+
+class ApiAddProduct(View):
+    def post(self,request):
+        print(request.POST)
+        r = request.POST
+        new_product = Product.objects.create(name=r['name'],
+                                             price=r['price'],
+                                             description=r['description'],
+                                             category_id=r['category']
+                                             )
+
+        print(new_product.name,new_product.category, 'NEW PRODUCT')
+        new_product.save()
+        return HttpResponse("New Product")

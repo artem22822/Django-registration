@@ -8,10 +8,22 @@ class TestApiSearch(unittest.TestCase):
         client = Client()
         url = '/api/search/'
         response = client.post(path=url, data={'api_search':'o'})
-        print(response.content)
+        #print(response.content)
 
     def test_api_search_GET(self):
         client = Client()
         url = '/api/search/'
         response = client.get(path=url, data={'api_search':'b'})
-        print(response.content)
+        #print(response.content)
+
+class TestApiAddProduct(unittest.TestCase):
+    def test_api_add_product_POST(self):
+        client = Client()
+        url = '/api/addproduct/'
+        product_data = {
+                        'name': 'New product',
+                        'price': 20,
+                        'description': 'Test product',
+                        'category': 2
+                        }
+        response = client.post(path=url, data=product_data)

@@ -3,7 +3,7 @@ from .import views
 from .views import HomeView, SingupView, LoginView, LogoutView, \
 ProductView, AddToCart, CartView, DeleteItemCart, ViewProduct,OrderView, MyOrdersView ,\
 CategoryView, ViewCategoryView,ProductSearchView, ApiProductsView, ApiProductView, ApiCartView,\
-ApiDeleteItemCart, ApiSearchView
+ApiDeleteItemCart, ApiSearchView, ApiAddProduct
 
 urlpatterns = [
     path('', SingupView.as_view(), name='singup'),
@@ -25,5 +25,6 @@ urlpatterns = [
     path('api/cart/<int:product_id>/', ApiCartView.as_view(), name='api_product'),
     path('api/cartdel/<int:product_id>/', ApiDeleteItemCart.as_view(), name='api_cartdel'),
     path('api/search/', ApiSearchView.as_view(), name='api_search'),
+    path('api/addproduct/', ApiAddProduct.as_view(), name='api_add_product'),
 
 ]
