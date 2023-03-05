@@ -158,3 +158,6 @@ class ProductSearchView(View):
 
             return render(request, 'accounts/home.html')
 
+class RenderJsView(View):
+    def get(self,request):
+        return render(request, 'accounts/render_js.html')

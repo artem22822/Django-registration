@@ -27,6 +27,7 @@ class ApiProductView(View):
                 'price': product.price,
                 'description': product.description,
                 'category': product.category.name,
+                'id': product_id,
             }
             return JsonResponse(d)
 

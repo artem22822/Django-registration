@@ -30,6 +30,7 @@ class Product(models.Model):
             'description': self.description,
             'price': str(self.price),
             'category': self.category.name,
+            'id': self.id
         }
 
 

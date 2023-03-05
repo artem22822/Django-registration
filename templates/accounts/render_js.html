@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Api Product JS</title>
+</head>
+<body>
+<button onclick="getData()">Send Request</button>
+<script>
+    function getData(){
+        fetch('/api/products/')
+            .then(response => response.json())
+            .then(data => {
+                for (let i = 0; i < data.length; i++) {
+                    const product = data[i];
+
+                    const element = document.createElement('div')
+                    const name = document.createElement('a')
+                    const price = document.createElement('p')
+                    const description = document.createElement('p')
+                    const category = document.createElement('p')
+                    const id = document.createElement('p')
+
+                    name.textContent = 'Name: '  + product.name;
+                    name.href = `/product/viwe/${product.id}`;
+                    price.textContent ='Price: ' + product.price;
+                    description.textContent = 'Drscription: '+ product.description;
+                    category.textContent = 'Category: ' + product.category;
+
+                    element.appendChild(name)
+                    element.appendChild(price)
+                    element.appendChild(description)
+                    element.appendChild(category)
+
+                    document.body.appendChild(element)
+                    console.log(data)
+            }})
+            .catch(error => console.error(error))
+
+    }
+    getProductById(1, 'Display');
+
+    function getProductById(id, name){
+        fetch(`/api/product/${id}`)
+            .then(response => response.json())
+            .then(data => console.log(name))
+            .catch(error => console.error(error));
+    }
+
+
+
+</script>
+</body>
+</html>
