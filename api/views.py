@@ -84,6 +84,7 @@ class ApiSearchView(View):
 
     def get(self,request):
         query_search = request.GET.get('api_search','')
+        print(query_search,'Qqqqqq')
         data = []
         if query_search:
 
@@ -95,7 +96,7 @@ class ApiSearchView(View):
                     'description': product.description,
                     'category': product.category.name,
                 })
-        #print(data, "DADADADADADADADADt")
+        print(data, "DADADADADADADADADt")
         return HttpResponse(json.dumps(data))
 
 class ApiAddProduct(View):
@@ -129,3 +130,30 @@ class ApiCategoryProducts(View):
 
             print(data,"Data")
             return HttpResponse(json.dumps(data))
+
+class CartQuantity(View):
+    def get(self,request):
+        user = request.user
+        cart = Cart.objects.get(user=user)
+        products = cart.products.all()
+        quantity = {'quantity': len(products)}
+
+        return HttpResponse(json.dumps(quantity))
+
+class CartProducts(View):
+    def get(self,request):
+        user = request.user
+        cart = Cart.objects.get(user=user)
+        products = cart.products.all()
+        data = []
+        for product in products:
+            data.append({
+                'name': product.name,
+                'price': int(product.price),
+                'description': product.description,
+                'category': product.category.name,
+                'id': product.id,
+            })
+
+        return HttpResponse(json.dumps(data))
+

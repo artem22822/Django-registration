@@ -5,8 +5,139 @@
     <title>Api Product JS</title>
 </head>
 <body>
-<button onclick="getData()">Send Request</button>
+<button style="background: #86b7fe" onclick="getData()">Send Request</button>
+
 <script>
+    CartElement();
+    function CartElement() {
+        // Create element cart
+        const cartElement = document.createElement('div');
+        cartElement.classList.add('cart');
+        const titleElement = document.createElement('h2')
+        titleElement.textContent = 'Cart'
+        const quantityElement = document.createElement('div')
+        quantityElement.textContent = 0;
+
+        cartElement.appendChild(titleElement)
+        cartElement.appendChild(quantityElement)
+
+        document.body.appendChild(cartElement)
+        // Stile cart
+        cartElement.style.position = 'fixed';
+        cartElement.style.top = '20px';
+        cartElement.style.right = '20px';
+        cartElement.style.padding = '10px';
+        cartElement.style.background = 'green';
+
+        fetch(`/api/cartquantity/`)
+                .then(response => response.json())
+                .then(data =>{
+                    quantityElement.textContent = data.quantity
+            })
+        cartElement.addEventListener("click", () => {
+            console.log('Clic CARTTTTTTTTTTT')
+            fetch(`/api/cartproducts/`)
+                .then(response => response.json())
+                .then(data =>{
+                    for (let i=0; i < data.length; i++) {
+                        const product = data[i]
+                        const product_id = product.id
+                        const  element = document.createElement('div')
+                        const name = document.createElement('a')
+                        const price = document.createElement('p')
+                        const description = document.createElement('p')
+                        const category = document.createElement('p')
+                        const product_delete = document.createElement('button')
+
+
+                        name.textContent = 'Name: '  + product.name;
+                        price.textContent ='Price: ' + product.price;
+                        description.textContent = 'Drscription: '+ product.description;
+                        category.textContent = 'Category: ' + product.category;
+                        product_delete.textContent = 'Delete: ';
+
+                        element.appendChild(name)
+                        element.appendChild(price)
+                        element.appendChild(description)
+                        element.appendChild(category)
+                        element.appendChild(product_delete)
+
+                        element.style.top = '0px';
+                        element.style.right = '30px';
+                        element.style.padding = '10px';
+                        element.style.background = 'grey';
+
+                        document.body.appendChild(element)
+                        product_delete.addEventListener("click", () => {
+                            fetch(`/api/cartdel/${product_id}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(data)
+                                    element.remove()
+                                    CartElement()
+                                })
+
+                        })
+                    }
+                })
+        })
+
+    }
+    SeachProduct()
+    function SeachProduct(){
+        // Create element Search
+        const searchElement = document.createElement('div')
+        searchElement.classList.add('search')
+        //Create Element for the input search
+        const inputElement = document.createElement('input')
+        const buttonElement = document.createElement('button')
+        inputElement.type = 'text'
+        inputElement.placeholder = 'Search'
+        buttonElement.textContent = 'Search'
+        //Add elements in div
+        searchElement.appendChild(inputElement)
+        searchElement.appendChild(buttonElement)
+
+        document.body.appendChild(searchElement)
+        //Style Element Search
+        searchElement.style.position = 'fixed';
+        searchElement.style.top = '10%';
+        searchElement.style.left = '50%';
+        searchElement.style.transform = 'translate(-50%, -50%)';
+        searchElement.style.backgroundColor = '#fff';
+        searchElement.style.padding = '20px';
+        searchElement.style.borderRadius = '5px';
+        searchElement.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+
+        //Clic on the button
+        const ulSearchElement = document.createElement('ul')
+        searchElement.appendChild(ulSearchElement)
+        buttonElement.addEventListener("click", () =>{
+            const inputValue = inputElement.value
+            fetch(`/api/search/?api_search=${inputValue}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                ulSearchElement.innerHTML = ""; // Clear previous search results
+                if (data.length === 0 ){
+                        const pSearchElement = document.createElement('h2')
+                        pSearchElement.textContent = 'Product Not Found'
+                        searchElement.appendChild(pSearchElement)
+                }else{
+
+                    for(let i=0; i < data.length; i++){
+                        const product = data[i]
+                        const liSearchElement = document.createElement('li')
+                        liSearchElement.textContent = product.name
+                        ulSearchElement.appendChild(liSearchElement)
+                        searchElement.appendChild(ulSearchElement)
+
+                    }}
+
+            })
+        })
+        console.log("SEARRRRCCCHHH")
+    }
     function getData(){
         fetch('/api/products/')
             .then(response => response.json())
@@ -15,36 +146,97 @@
                     const product = data[i];
 
                     const element = document.createElement('div')
+                    element.id = `${product.id}`
                     const name = document.createElement('a')
                     const price = document.createElement('p')
                     const description = document.createElement('p')
                     const category = document.createElement('p')
                     const id = document.createElement('p')
 
+
                     name.textContent = 'Name: '  + product.name;
                     name.href = `/product/viwe/${product.id}`;
                     price.textContent ='Price: ' + product.price;
                     description.textContent = 'Drscription: '+ product.description;
                     category.textContent = 'Category: ' + product.category;
+                    id.textContent = 'ID: ' + product.id;
+
 
                     element.appendChild(name)
                     element.appendChild(price)
                     element.appendChild(description)
                     element.appendChild(category)
+                    element.appendChild(id)
 
                     document.body.appendChild(element)
-                    console.log(data)
+                    element.addEventListener('click', function (event){
+                        console.log(event.target);
+                        if(event.target.tagName === 'DIV'){
+                            getProductById(product.id,event)
+                        }
+
+                    });
+
             }})
             .catch(error => console.error(error))
 
     }
-    getProductById(1, 'Display');
 
-    function getProductById(id, name){
+    function getProductById(id,event){
         fetch(`/api/product/${id}`)
             .then(response => response.json())
-            .then(data => console.log(name))
+            .then(data => {
+                const event_div = event.target
+                const product = data
+                const element = document.createElement('div')
+                element.id = 'xxx'
+                const name = document.createElement('p')
+                const price = document.createElement('p')
+                const description = document.createElement('p')
+                const category = document.createElement('p')
+                const addToCartButton = document.createElement('button')
+
+                name.textContent = 'Имя: ' + product.name
+                price.textContent = 'Цена: ' + product.price
+                description.textContent = 'Описание: ' + product.description
+                category.textContent = 'Категория: ' + product.category
+                addToCartButton.textContent = 'Add To Cart';
+
+                name.style.backgroundColor = 'red';
+                price.style.backgroundColor = 'blue';
+                description.style.backgroundColor = 'green';
+                category.style.backgroundColor = 'black';
+                addToCartButton.style.borderColor = '#333';
+
+                element.appendChild(name)
+                element.appendChild(price)
+                element.appendChild(description)
+                element.appendChild(category)
+                element.append(addToCartButton)
+
+                console.log(element, ' Element')
+                console.log(event_div, ' Event_div')
+                // if add element delete
+                let removeToElement = document.getElementById('xxx');
+                if (removeToElement) {
+                    removeToElement.remove()
+                }
+                addToCartButton.addEventListener("click", () =>{
+                    console.log('Button clicked!');
+                    fetch(`/api/cart/${id}`)
+                    .then(response => response.json())
+                    .then(data =>{
+                        console.log(data, 'API CART DATAAAAAAAAA')
+                        CartElement()
+                        addToCartButton.remove()
+                    })
+                })
+
+                event_div.appendChild(element)
+                })
             .catch(error => console.error(error));
+
+
     }
 
 

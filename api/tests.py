@@ -7,13 +7,13 @@ class TestApiSearch(unittest.TestCase):
     def test_api_search_POST(self):
         client = Client()
         url = '/api/search/'
-        response = client.post(path=url, data={'api_search':'o'})
+        response = client.post(path=url, data={'api_search':'q'})
         #print(response.content)
 
     def test_api_search_GET(self):
         client = Client()
         url = '/api/search/'
-        response = client.get(path=url, data={'api_search':'b'})
+        response = client.get(path=url, data={'api_search':'q'})
         #print(response.content)
 
 class TestApiAddProduct(unittest.TestCase):
